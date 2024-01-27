@@ -35,19 +35,19 @@ jobs:
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
 
-      - name: Build With Gradle
-        run: |
-          chmod +x gradlew
-          ./gradlew clean assembleRelease --parallel --daemon --warning-mode all --stacktrace
-
-
       - name: Prepare App
         run: |
           mkdir -p ${{ github.workspace }}/apk/
-          find . -name "*.apk" -exec mv {} ${{ github.workspace }}/apk/ \;
-
+          for file in `find ~ -name "*.apk" -print`; do
+            mv "$file" ${{ github.workspace }}/apk/
+          done
       - name: Upload App To Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: com.fongmi.android.tv
           path: ${{ github.workspace }}/apk/*
+          
+
+
+
+
