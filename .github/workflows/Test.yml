@@ -34,7 +34,14 @@ jobs:
           sed -i '$a\RELEASE_KEY_ALIAS=TVBoxOSC'            ./gradle.properties
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
-
+      - name: Build With Gradle
+        run: |
+          num=$(find ${{ github.workspace }} -name gradlew  | awk -F"/" '{print NF-1}')
+          DIR=$(find ${{ github.workspace }} -name gradlew  | cut -d \/ -f$num)
+          cd $DIR
+          chmod +x gradlew
+          ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+          
       - name: Prepare App
         run: |
           mkdir -p ${{ github.workspace }}/apk/
