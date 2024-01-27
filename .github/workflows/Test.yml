@@ -35,8 +35,11 @@ jobs:
 
       - name: Build With Gradle
         run: |
+          num=$(find ${{ github.workspace }} -name gradlew  | awk -F"/" '{print NF-1}')
+          DIR=$(find ${{ github.workspace }} -name gradlew  | cut -d \/ -f$num)
+          cd $DIR
           chmod +x gradlew
-          ./gradlew clean assembleRelease --parallel --daemon --warning-mode all --stacktrace
+          ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
 
       - name: Prepare App
         run: |
