@@ -1,4 +1,4 @@
-name: Test1 Build
+name: DIY-ok Build
 
 on:
   workflow_dispatch:
@@ -48,14 +48,22 @@ jobs:
           if [ $setup_java_ver -gt 11 ]; then
             echo "setup_java_ver=$setup_java_ver" >> $GITHUB_ENV
           fi
-      - uses: actions/setup-java@v4
+      - uses: 操作/设置-java@v4
         if: ${{ env.setup_java_ver }}
         with:
           distribution: temurin
           java-version: ${{ env.setup_java_ver }}
       - uses: gradle/gradle-build-action@v2
 
- 
+      - name: DIY 蜂蜜
+        if: ${{ env.commit }}
+        working-directory: ${{ matrix.repoName }}
+        run: |
+          cp -rf $GITHUB_WORKSPACE/DIY/蜂蜜/VodConfig.java   app/src/main/java/com/fongmi/android/tv/api/config/VodConfig.java
+          #版本 包名 修改
+          #sed -i 's%1.0.0%1.1.0%g' app/build.gradle
+          sed -i 's%com.fongmi.android.tv%com.okfongmi.android.tv%g' app/build.gradle
+          
       - name: 设置 Gradle
         if: ${{ env.commit }}
         uses: gradle/gradle-build-action@v2
@@ -67,13 +75,14 @@ jobs:
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
 
-      - name: Prepare App
+      - name: 准备应用程序
         run: |
           mkdir -p ${{ github.workspace }}/apk/
           find . -name "*.apk" -exec mv {} ${{ github.workspace }}/apk/ \;
 
-      - name: Upload App To Artifact
-        uses: actions/upload-artifact@v2
+      - name: 将应用上传到项目  
+        uses: actions/upload-artifact@v3
+        if: ${{ env.commit }}
         with:
-          name: com.fongmi.android.tv
-          path: ${{ github.workspace }}/apk/*
+          name: ${{ matrix.appName }}
+          path: ${{ matrix.repoName }}/apk/*
