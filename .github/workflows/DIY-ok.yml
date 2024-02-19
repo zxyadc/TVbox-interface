@@ -55,14 +55,7 @@ jobs:
           java-version: ${{ env.setup_java_ver }}
       - uses: gradle/gradle-build-action@v2
 
-      - name: DIY 蜂蜜
-        if: ${{ env.commit }}
-        working-directory: ${{ matrix.repoName }}
-        run: |
-          cp -rf $GITHUB_WORKSPACE/DIY/蜂蜜/VodConfig.java   app/src/main/java/com/fongmi/android/tv/api/config/VodConfig.java
-          #版本 包名 修改
-          #sed -i 's%1.0.0%1.1.0%g' app/build.gradle
-          sed -i 's%com.fongmi.android.tv%com.okfongmi.android.tv%g' app/build.gradle
+
           
       - name: 设置 Gradle
         if: ${{ env.commit }}
