@@ -6,7 +6,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - userName: FongMi
+            repoName: TV 
+            branchName: release
+            appName: 影视
+            
     steps:
       - uses: actions/setup-node@v4  # Use the latest version of setup-node
         with:
