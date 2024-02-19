@@ -41,7 +41,11 @@ jobs:
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
 
-      - name: Build With Gradle
+      - name: 设置 Gradle
+        if: ${{ env.commit }}
+        uses: gradle/gradle-build-action@v2
+        
+      - name: 使用 Gradle 构建
         if: ${{ env.commit }}
         working-directory: ${{ matrix.repoName }}
         run: |
